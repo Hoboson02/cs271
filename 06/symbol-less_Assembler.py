@@ -79,18 +79,6 @@ for i in range(0, 16):
    variableCursor = 16    # the next memory location available after the R# values
    root = sys.argv[1]     
 
-def strip(line):
-# removes all excess values, such as comments and white space
-
-  value = line[0]
-  if value == "\n" or value == "/":
-    return ""
-  elif value == " ":
-    return strip(line[1:])
-  else:
-    return value + strip(line[1:])
-
-
 def integrate(line):
 # integrates null, dest, and jump fields, while making them translatable
 
@@ -148,29 +136,6 @@ def translate(line):
     return "111" + codes[0] + codes[1] + codes[2]
 
 
-def firstPass():
-# searches file for jump labels and enters them into the symbol table
-# also removes out comments & empty lines
-
-  infile = open(root + ".asm")
-  outfile = open(root + ".tmp", "w")
-
-  lineNumber = 0
-  for line in infile:
-    sline = strip(line)
-    if sline != "":
-      if sline[0] == "(":
-        label = sline[1:-1]
-        table[label] = lineNumber
-        sline = ""
-      else:
-        lineNumber += 1
-        outfile.write(sline + "\n")
-
-  infile.close()
-  outfile.close()
-
-
 def assemble():
 # takes file stripped of labels and translates it into .hack
 
@@ -187,5 +152,4 @@ def assemble():
 
 
 # actual program is just calls to these two functions
-firstPass()
 assemble()
